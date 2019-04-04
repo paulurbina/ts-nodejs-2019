@@ -4,7 +4,8 @@ import exphbs from 'express-handlebars';
 import path from 'path';
 
 // import Routes
-import allRoutes from './routes';
+import indexRoutes from './routes';
+import worksRoutes from './routes/works'
 
 class Application {
 	app: express.Application;
@@ -18,7 +19,7 @@ class Application {
 	}
 
 	settings() {
-		this.app.set('port', process.env.PORT || 4000)
+		this.app.set('port', process.env.PORT || 3000)
 		this.app.set('views', path.join(__dirname, 'views'));
 		this.app.engine('.hbs', exphbs({
 			layoutsDir: path.join(this.app.get('views'), 'layouts'),
@@ -31,10 +32,13 @@ class Application {
 
 	middlewares() {
 		this.app.use(morgan('dev'));
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({extended: false}));
 	}
 
 	routes() {
-		this.app.use(allRoutes);
+		this.app.use(indexRoutes);
+		this.app.use('/works' ,worksRoutes);
 	}
 
 	public() {
